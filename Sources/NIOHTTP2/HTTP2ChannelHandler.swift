@@ -44,7 +44,7 @@ public final class NIOHTTP2Handler: ChannelDuplexHandler {
     private static let defaultMaximumRecentlyResetFrames: Int = 32
 
     /// The event loop on which this handler will do work.
-    @usableFromInline internal let _eventLoop: EventLoop?
+    internal let _eventLoop: EventLoop?
 
     /// The connection state machine. We always have one of these.
     private var stateMachine: HTTP2ConnectionStateMachine
@@ -115,8 +115,6 @@ public final class NIOHTTP2Handler: ChannelDuplexHandler {
 
     /// A delegate which is told about frames which have been written.
     private let frameDelegate: NIOHTTP2FrameDelegate?
-
-    @usableFromInline
     internal var inboundStreamMultiplexer: InboundStreamMultiplexer? {
         self.inboundStreamMultiplexerState.multiplexer
     }
@@ -1390,7 +1388,6 @@ extension NIOHTTP2Handler {
     /// The type of all `inboundStreamInitializer` callbacks which do not need to return data.
     public typealias StreamInitializer = NIOChannelInitializer
     /// The type of NIO Channel initializer callbacks which need to return untyped data.
-    @usableFromInline
     internal typealias StreamInitializerWithAnyOutput = @Sendable (Channel) -> EventLoopFuture<any Sendable>
 
     /// Creates a new ``NIOHTTP2Handler`` with a local multiplexer. (i.e. using
@@ -1437,8 +1434,6 @@ extension NIOHTTP2Handler {
             streamDelegate
         )
     }
-
-    @usableFromInline
     internal convenience init(
         mode: ParserMode,
         eventLoop: EventLoop,
@@ -1584,8 +1579,6 @@ extension NIOHTTP2Handler {
             throw NIOHTTP2Errors.missingMultiplexer()
         }
     }
-
-    @inlinable
     @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
     internal func syncAsyncStreamMultiplexer<Output: Sendable>(
         continuation: any AnyContinuation,

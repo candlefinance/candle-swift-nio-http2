@@ -34,7 +34,6 @@ internal struct HeaderTableEntry: Sendable {
 /// Storage for the header tables, both static and dynamic. Similar in spirit to
 /// `HPACKHeaders` and `NIOHTTP1.HTTPHeaders`, but uses a ring buffer to hold the bytes to
 /// avoid allocation churn while evicting and replacing entries.
-@usableFromInline
 struct HeaderTableStorage {
     static let defaultMaxSize = 4096
 
@@ -193,7 +192,6 @@ struct HeaderTableStorage {
 }
 
 extension HeaderTableStorage: CustomStringConvertible {
-    @usableFromInline
     var description: String {
         var array: [(String, String)] = []
         for header in self.headers {

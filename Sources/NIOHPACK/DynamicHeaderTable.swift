@@ -16,7 +16,6 @@ import NIOCore
 
 /// Implements the dynamic part of the HPACK header table, as defined in
 /// [RFC 7541 § 2.3](https://httpwg.org/specs/rfc7541.html#dynamic.table).
-@usableFromInline
 struct DynamicHeaderTable: Sendable {
     public static let defaultSize = 4096
 

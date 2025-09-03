@@ -31,21 +31,17 @@ public struct HPACKHeaders: ExpressibleByDictionaryLiteral, Sendable {
     /// as the crossover point where using an array became more expensive than using a set when
     /// running the `hpackheaders_normalize_httpheaders_removing_10k_conn_headers` performance test
     /// with varying input sizes.
-    @usableFromInline
     static let connectionHeaderValueArraySizeLimit = 32
 
-    @usableFromInline
     internal var headers: [HPACKHeader]
 
     // see 8.1.2.2. Connection-Specific Header Fields in RFC 7540
-    @usableFromInline
     static let illegalNames: [String] = [
         "connection", "keep-alive", "proxy-connection",
         "transfer-encoding", "upgrade",
     ]
 
     /// Constructor that can be used to map between `HTTPHeaders` and `HPACKHeaders` types.
-    @inlinable
     public init(httpHeaders: HTTPHeaders, normalizeHTTPHeaders: Bool) {
         if normalizeHTTPHeaders {
             self.headers = httpHeaders.map { HPACKHeader(name: $0.name.lowercased(), value: $0.value) }
@@ -73,7 +69,6 @@ public struct HPACKHeaders: ExpressibleByDictionaryLiteral, Sendable {
     }
 
     /// Constructor that can be used to map between `HTTPHeaders` and `HPACKHeaders` types.
-    @inlinable
     public init(httpHeaders: HTTPHeaders) {
         self.init(httpHeaders: httpHeaders, normalizeHTTPHeaders: true)
     }
@@ -85,7 +80,6 @@ public struct HPACKHeaders: ExpressibleByDictionaryLiteral, Sendable {
     ///
     /// - Parameters:
     ///   - headers: An initial set of headers to use to populate the header block.
-    @inlinable
     public init(_ headers: [(String, String)] = []) {
         self.headers = headers.map { HPACKHeader(name: $0.0, value: $0.1) }
     }
@@ -96,7 +90,6 @@ public struct HPACKHeaders: ExpressibleByDictionaryLiteral, Sendable {
     /// rewritable by proxies.
     ///
     /// - Parameter elements: name, value pairs provided by a dictionary literal.
-    @inlinable
     public init(dictionaryLiteral elements: (String, String)...) {
         self.init(elements)
     }
@@ -116,13 +109,11 @@ public struct HPACKHeaders: ExpressibleByDictionaryLiteral, Sendable {
     }
 
     /// Internal initializer to make things easier for unit tests.
-    @inlinable
     init(fullHeaders: [(HPACKIndexing, String, String)]) {
         self.headers = fullHeaders.map { HPACKHeader(name: $0.1, value: $0.2, indexing: $0.0) }
     }
 
     /// Internal initializer for use in HPACK decoding.
-    @inlinable
     init(headers: [HPACKHeader]) {
         self.headers = headers
     }
@@ -138,7 +129,6 @@ public struct HPACKHeaders: ExpressibleByDictionaryLiteral, Sendable {
     ///   - value: The header field value to add for the given name.
     ///   - indexing: The types of indexing and rewriting operations a decoder may take with
     ///         regard to this header.
-    @inlinable
     public mutating func add(name: String, value: String, indexing: HPACKIndexing = .indexable) {
         precondition(!name.utf8.contains(where: { !$0.isASCII }), "name must be ASCII")
         self.headers.append(HPACKHeader(name: name, value: value, indexing: indexing))
@@ -154,7 +144,6 @@ public struct HPACKHeaders: ExpressibleByDictionaryLiteral, Sendable {
     ///     strings. For HTTP/2 lowercase header names are strongly recommended.
     ///   - indexing:  The types of indexing and rewriting operations a decoder may take with
     ///         regard to this header.
-    @inlinable
     public mutating func add<S: Sequence>(contentsOf other: S, indexing: HPACKIndexing = .indexable)
     where S.Element == (String, String) {
         self.reserveCapacity(self.headers.count + other.underestimatedCount)
@@ -170,7 +159,6 @@ public struct HPACKHeaders: ExpressibleByDictionaryLiteral, Sendable {
     ///
     /// - Parameter other: The sequence of header name/value/indexing triplets. Header names
     ///     must be ASCII strings. For HTTP/2 lowercase header names are strongly recommended.
-    @inlinable
     public mutating func add<S: Sequence>(contentsOf other: S) where S.Element == HPACKHeaders.Element {
         self.reserveCapacity(self.headers.count + other.underestimatedCount)
         for (name, value, indexing) in other {
@@ -194,7 +182,6 @@ public struct HPACKHeaders: ExpressibleByDictionaryLiteral, Sendable {
     ///   - value: The header field value to add for the given name.
     ///   - indexing: The types of indexing and rewriting operations a decoder may take with
     ///         regard to this header.
-    @inlinable
     public mutating func replaceOrAdd(name: String, value: String, indexing: HPACKIndexing = .indexable) {
         self.remove(name: name)
         self.add(name: name, value: value, indexing: indexing)
@@ -205,7 +192,6 @@ public struct HPACKHeaders: ExpressibleByDictionaryLiteral, Sendable {
     /// This method uses case-insensitive comparisons for the header field name.
     ///
     /// - Parameter nameToRemove: The name of the header field to remove from the block.
-    @inlinable
     public mutating func remove(name nameToRemove: String) {
         self.headers.removeAll { header in
             nameToRemove.isEqualCaseInsensitiveASCIIBytes(to: header.name)
@@ -223,7 +209,6 @@ public struct HPACKHeaders: ExpressibleByDictionaryLiteral, Sendable {
     ///
     /// - Parameter name: The header field name whose values are to be retrieved.
     /// - Returns: A list of the values for that header field name.
-    @inlinable
     public subscript(name: String) -> [String] {
         self._values(forHeader: name, canonicalForm: false)
     }
@@ -239,7 +224,6 @@ public struct HPACKHeaders: ExpressibleByDictionaryLiteral, Sendable {
     ///
     /// - Parameter name: The header field name whose first value should be retrieved.
     /// - Returns: The first value for the header field name.
-    @inlinable
     public func first(name: String) -> String? {
         guard !self.headers.isEmpty else {
             return nil
@@ -253,7 +237,6 @@ public struct HPACKHeaders: ExpressibleByDictionaryLiteral, Sendable {
     /// - Parameters:
     ///   - name: The name of the header
     /// - Returns: `true` if a header with the name (and value) exists, `false` otherwise.
-    @inlinable
     public func contains(name: String) -> Bool {
         guard !self.headers.isEmpty else {
             return false
@@ -274,7 +257,6 @@ public struct HPACKHeaders: ExpressibleByDictionaryLiteral, Sendable {
     ///
     /// - Parameter name: The header field name whose values are to be retrieved.
     /// - Returns: A list of the values for that header field name.
-    @inlinable
     public subscript(canonicalForm name: String) -> [String] {
         self._values(forHeader: name, canonicalForm: true)
     }
@@ -309,7 +291,6 @@ public struct HPACKHeaders: ExpressibleByDictionaryLiteral, Sendable {
         return (header.name, header.value)
     }
 
-    @inlinable
     internal func _values(forHeader name: String, canonicalForm: Bool) -> [String] {
         let values = self.values(forHeader: name, canonicalForm: canonicalForm)
         var iterator = values.makeIterator()
@@ -427,7 +408,6 @@ extension HPACKHeaders.Values {
 
 extension HPACKHeaders {
     /// The total number of headers that can be contained without allocating new storage.
-    @inlinable
     public var capacity: Int {
         self.headers.capacity
     }
@@ -435,7 +415,6 @@ extension HPACKHeaders {
     /// Reserves enough space to store the specified number of headers.
     ///
     /// - Parameter minimumCapacity: The requested number of headers to store.
-    @inlinable
     public mutating func reserveCapacity(_ minimumCapacity: Int) {
         self.headers.reserveCapacity(minimumCapacity)
     }
@@ -444,7 +423,6 @@ extension HPACKHeaders {
     ///
     /// - Parameter keepingCapacity: Whether to keep the underlying memory or not. Use this flag to
     ///                              reduce allocations when reusing the header collection.
-    @inlinable
     public mutating func removeAll(keepingCapacity: Bool = false) {
         self.headers.removeAll(keepingCapacity: keepingCapacity)
     }
@@ -454,41 +432,33 @@ extension HPACKHeaders: RandomAccessCollection {
     public typealias Element = (name: String, value: String, indexable: HPACKIndexing)
 
     public struct Index: Comparable {
-        @usableFromInline
         let _base: Array<HPACKHeaders>.Index
 
-        @inlinable
         init(_base: Array<HPACKHeaders>.Index) {
             self._base = _base
         }
 
-        @inlinable
         public static func < (lhs: Index, rhs: Index) -> Bool {
             lhs._base < rhs._base
         }
     }
 
-    @inlinable
     public var startIndex: HPACKHeaders.Index {
         .init(_base: self.headers.startIndex)
     }
 
-    @inlinable
     public var endIndex: HPACKHeaders.Index {
         .init(_base: self.headers.endIndex)
     }
 
-    @inlinable
     public func index(before i: HPACKHeaders.Index) -> HPACKHeaders.Index {
         .init(_base: self.headers.index(before: i._base))
     }
 
-    @inlinable
     public func index(after i: HPACKHeaders.Index) -> HPACKHeaders.Index {
         .init(_base: self.headers.index(after: i._base))
     }
 
-    @inlinable
     public subscript(position: HPACKHeaders.Index) -> Element {
         let element = self.headers[position._base]
         return (name: element.name, value: element.value, indexable: element.indexing)
@@ -504,15 +474,12 @@ extension HPACKHeaders: RandomAccessCollection {
     /// This iterator will return each value for a given header name separately. That
     /// means that `name` is not guaranteed to be unique in a given block of headers.
     public struct Iterator: IteratorProtocol {
-        @usableFromInline
         var _base: Array<HPACKHeader>.Iterator
 
-        @inlinable
         init(_ base: HPACKHeaders) {
             self._base = base.headers.makeIterator()
         }
 
-        @inlinable
         public mutating func next() -> Element? {
             guard let element = self._base.next() else {
                 return nil
@@ -521,7 +488,6 @@ extension HPACKHeaders: RandomAccessCollection {
         }
     }
 
-    @inlinable
     public func makeIterator() -> HPACKHeaders.Iterator {
         Iterator(self)
     }
@@ -543,7 +509,6 @@ extension HPACKHeaders: CustomStringConvertible {
 // indexability are ignored. We should change it, but we should be careful when we do so.
 // More discussion at https://github.com/apple/swift-nio-http2/issues/342.
 extension HPACKHeaders: Equatable {
-    @inlinable
     public static func == (lhs: HPACKHeaders, rhs: HPACKHeaders) -> Bool {
         guard lhs.headers.count == rhs.headers.count else {
             return false
@@ -565,7 +530,6 @@ extension HPACKHeaders: Equatable {
 }
 
 extension HPACKHeaders: Hashable {
-    @inlinable
     public func hash(into hasher: inout Hasher) {
         // Discriminator, to indicate that this is a collection. This improves the performance
         // of Sets and Dictionaries that include collections of HPACKHeaders by reducing hash collisions.
@@ -605,18 +569,13 @@ public enum HPACKIndexing: CustomStringConvertible, Sendable {
     }
 }
 
-@usableFromInline
 internal struct HPACKHeader: Sendable {
-    @usableFromInline
     var indexing: HPACKIndexing
 
-    @usableFromInline
     var name: String
 
-    @usableFromInline
     var value: String
 
-    @inlinable
     internal init(name: String, value: String, indexing: HPACKIndexing = .indexable) {
         self.indexing = indexing
         self.name = name
@@ -625,7 +584,6 @@ internal struct HPACKHeader: Sendable {
 }
 
 extension HPACKHeader {
-    @inlinable
     internal var size: Int {
         // RFC 7541 § 4.1:
         //
@@ -639,7 +597,6 @@ extension HPACKHeader {
 }
 
 extension UInt8 {
-    @inlinable
     var isASCII: Bool {
         self <= 127
     }
@@ -647,7 +604,6 @@ extension UInt8 {
 
 // private but inlinable
 extension UTF8.CodeUnit {
-    @inlinable
     var isASCIIWhitespace: Bool {
         switch self {
         case UInt8(ascii: " "),
@@ -660,7 +616,6 @@ extension UTF8.CodeUnit {
 }
 
 extension Substring.UTF8View {
-    @inlinable
     func _trimWhitespace() -> Substring.UTF8View {
         guard let firstNonWhitespace = self.firstIndex(where: { !$0.isASCIIWhitespace }) else {
             // The whole substring is ASCII whitespace.
@@ -674,41 +629,34 @@ extension Substring.UTF8View {
 }
 
 extension String.UTF8View {
-    @inlinable
     func _lazySplit(separator: UTF8.CodeUnit) -> LazyUTF8ViewSplitSequence {
         LazyUTF8ViewSplitSequence(self, separator: separator)
     }
 
-    @usableFromInline
     struct LazyUTF8ViewSplitSequence: Sequence {
-        @usableFromInline typealias Element = Substring.UTF8View
+        typealias Element = Substring.UTF8View
 
-        @usableFromInline var _baseView: String.UTF8View
-        @usableFromInline var _separator: UTF8.CodeUnit
+        var _baseView: String.UTF8View
+        var _separator: UTF8.CodeUnit
 
-        @inlinable
         init(_ baseView: String.UTF8View, separator: UTF8.CodeUnit) {
             self._baseView = baseView
             self._separator = separator
         }
 
-        @inlinable
         func makeIterator() -> Iterator {
             Iterator(self)
         }
 
-        @usableFromInline
         struct Iterator: IteratorProtocol {
-            @usableFromInline var _base: LazyUTF8ViewSplitSequence
-            @usableFromInline var _lastSplitIndex: Substring.UTF8View.Index
+            var _base: LazyUTF8ViewSplitSequence
+            var _lastSplitIndex: Substring.UTF8View.Index
 
-            @inlinable
             init(_ base: LazyUTF8ViewSplitSequence) {
                 self._base = base
                 self._lastSplitIndex = base._baseView.startIndex
             }
 
-            @inlinable
             mutating func next() -> Substring.UTF8View? {
                 let endIndex = self._base._baseView.endIndex
 
@@ -737,7 +685,6 @@ extension String.UTF8View {
     ///
     /// - Parameter bytes: The string constant in the form of a collection of `UInt8`
     /// - Returns: Whether the collection contains **EXACTLY** this array or no, but by ignoring case.
-    @inlinable
     func compareCaseInsensitiveASCIIBytes(to other: String.UTF8View) -> Bool {
         // fast path: we can get the underlying bytes of both
         let maybeMaybeResult = self.withContiguousStorageIfAvailable { lhsBuffer -> Bool? in
@@ -763,7 +710,6 @@ extension String.UTF8View {
         }
     }
 
-    @inlinable
     @inline(never)
     func _compareCaseInsensitiveASCIIBytesSlowPath(to other: String.UTF8View) -> Bool {
         self.elementsEqual(other, by: { (($0 & 0xdf) == ($1 & 0xdf) && $0.isASCII) })
@@ -771,7 +717,6 @@ extension String.UTF8View {
 }
 
 extension String {
-    @inlinable
     internal func isEqualCaseInsensitiveASCIIBytes(to: String) -> Bool {
         self.utf8.compareCaseInsensitiveASCIIBytes(to: to.utf8)
     }

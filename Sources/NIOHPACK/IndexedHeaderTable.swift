@@ -17,9 +17,7 @@ import NIOCore
 /// The unified header table used by HTTP/2, encompassing both static and dynamic tables.
 public struct IndexedHeaderTable {
     // private but tests
-    @usableFromInline
     let staticTable: HeaderTableStorage
-    @usableFromInline
     var dynamicTable: DynamicHeaderTable
 
     // TODO(cory): This property should be removed, we only keep it for use in headerViews(at:).

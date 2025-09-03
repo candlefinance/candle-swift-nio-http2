@@ -13,12 +13,8 @@
 //===----------------------------------------------------------------------===//
 
 import NIOCore
-
-@usableFromInline
 internal struct InlineStreamMultiplexer {
     private let context: ChannelHandlerContext
-
-    @usableFromInline
     internal let _commonStreamMultiplexer: HTTP2CommonInboundStreamMultiplexer
 
     private let outboundView: NIOHTTP2Handler.OutboundView
@@ -180,16 +176,12 @@ extension InlineStreamMultiplexer {
     ) -> EventLoopFuture<Channel> {
         self._commonStreamMultiplexer.createStreamChannel(multiplexer: .inline(self), streamStateInitializer)
     }
-
-    @inlinable
     internal func createStreamChannel<Output: Sendable>(
         promise: EventLoopPromise<Output>?,
         _ initializer: @escaping NIOChannelInitializerWithOutput<Output>
     ) {
         self._commonStreamMultiplexer.createStreamChannel(multiplexer: .inline(self), promise: promise, initializer)
     }
-
-    @inlinable
     internal func createStreamChannel<Output: Sendable>(
         _ initializer: @escaping NIOChannelInitializerWithOutput<Output>
     ) -> EventLoopFuture<Output> {
@@ -286,11 +278,10 @@ extension NIOHTTP2Handler {
     /// `Output`. This type may be `HTTP2Frame` or changed to any other type.
     @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
     public struct AsyncStreamMultiplexer<InboundStreamOutput: Sendable>: Sendable {
-        @usableFromInline internal let _inlineStreamMultiplexer: InlineStreamMultiplexer.SendableView
+        internal let _inlineStreamMultiplexer: InlineStreamMultiplexer.SendableView
         public let inbound: NIOHTTP2AsyncSequence<InboundStreamOutput>
 
         // Cannot be created by users.
-        @usableFromInline
         internal init(
             _ inlineStreamMultiplexer: InlineStreamMultiplexer,
             eventLoop: EventLoop,
@@ -308,7 +299,6 @@ extension NIOHTTP2Handler {
         /// - Parameter initializer: A closure that will be called upon the created stream which is responsible for
         ///   initializing the stream's `Channel`.
         /// - Returns: The result of the `initializer`.
-        @inlinable
         public func openStream<Output: Sendable>(
             _ initializer: @escaping NIOChannelInitializerWithOutput<Output>
         ) async throws -> Output {
@@ -322,10 +312,9 @@ extension InlineStreamMultiplexer {
     ///
     /// We use unchecked Sendable here because we unconditionally hop so we are on the right event loop
     /// from here on.
-    @usableFromInline
     internal struct SendableView: @unchecked Sendable {
-        @usableFromInline internal let _inlineStreamMultiplexer: InlineStreamMultiplexer
-        @usableFromInline internal let _eventLoop: EventLoop
+        internal let _inlineStreamMultiplexer: InlineStreamMultiplexer
+        internal let _eventLoop: EventLoop
 
         init(_ inlineStreamMultiplexer: InlineStreamMultiplexer, eventLoop: EventLoop) {
             self._inlineStreamMultiplexer = inlineStreamMultiplexer
@@ -354,8 +343,6 @@ extension InlineStreamMultiplexer {
             }
             return promise.futureResult
         }
-
-        @inlinable
         internal func createStreamChannel<Output: Sendable>(
             _ initializer: @escaping NIOChannelInitializerWithOutput<Output>
         ) -> EventLoopFuture<Output> {

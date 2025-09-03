@@ -131,7 +131,6 @@ public struct HTTP2Frame: Sendable {
         /// The payload of a `DATA` frame.
         public struct Data {
             /// The application data carried within the `DATA` frame.
-            @inlinable
             public var data: IOData {
                 get {
                     self._backing.data
@@ -143,7 +142,6 @@ public struct HTTP2Frame: Sendable {
             }
 
             /// The value of the `END_STREAM` flag on this frame.
-            @inlinable
             public var endStream: Bool {
                 get {
                     self._backing.endStream
@@ -155,7 +153,6 @@ public struct HTTP2Frame: Sendable {
             }
 
             /// The number of padding bytes sent in this frame. If nil, this frame was not padded.
-            @inlinable
             public var paddingBytes: Int? {
                 get {
                     self._backing.paddingBytes.map { Int($0) }
@@ -173,46 +170,27 @@ public struct HTTP2Frame: Sendable {
                     }
                 }
             }
-
-            @usableFromInline
             var _backing: _Backing
-
-            @inlinable
             public init(data: IOData, endStream: Bool = false, paddingBytes: Int? = nil) {
                 self._backing = _Backing(data: data, endStream: endStream, paddingBytes: paddingBytes.map { UInt8($0) })
             }
-
-            @inlinable
             init(_ backing: _Backing) {
                 self._backing = backing
             }
-
-            @inlinable
             mutating func _copyIfNeeded() {
                 if !isKnownUniquelyReferenced(&self._backing) {
                     self._backing = self._backing.copy()
                 }
             }
-
-            @usableFromInline
             final class _Backing {
-                @usableFromInline
                 var data: IOData
-
-                @usableFromInline
                 var endStream: Bool
-
-                @usableFromInline
                 var paddingBytes: UInt8?
-
-                @inlinable
                 init(data: IOData, endStream: Bool, paddingBytes: UInt8?) {
                     self.data = data
                     self.endStream = endStream
                     self.paddingBytes = paddingBytes
                 }
-
-                @inlinable
                 func copy() -> _Backing {
                     _Backing(data: self.data, endStream: self.endStream, paddingBytes: self.paddingBytes)
                 }
@@ -225,19 +203,15 @@ public struct HTTP2Frame: Sendable {
             /// It allows us to elide having our two optionals by keeping track of their
             /// optionality here, which frees up a byte and keeps the total size of
             /// HTTP2Frame at 24 bytes.
-            @usableFromInline
             struct Booleans: OptionSet, Sendable, Hashable {
-                @usableFromInline
                 var rawValue: UInt8
-
-                @inlinable
                 init(rawValue: UInt8) {
                     self.rawValue = rawValue
                 }
 
-                @usableFromInline static let endStream = Booleans(rawValue: 1 << 0)
-                @usableFromInline static let priorityPresent = Booleans(rawValue: 1 << 1)
-                @usableFromInline static let paddingPresent = Booleans(rawValue: 1 << 2)
+                static let endStream = Booleans(rawValue: 1 << 0)
+                static let priorityPresent = Booleans(rawValue: 1 << 1)
+                static let paddingPresent = Booleans(rawValue: 1 << 2)
             }
 
             /// The decoded header block belonging to this `HEADERS` frame.
@@ -246,21 +220,17 @@ public struct HTTP2Frame: Sendable {
             /// Stream priority data.
             ///
             /// If `.priorityPresent` is not set in our boolean flags, this value is ignored.
-            @usableFromInline
             var _priorityData: StreamPriorityData
 
             /// The number of padding bytes in this frame.
             ///
             /// If `.paddingPresent` is not set in our boolean flags, this value is ignored.
-            @usableFromInline
             var _paddingBytes: UInt8
 
             /// Boolean flags that control the presence of other values in this frame.
-            @usableFromInline
             var booleans: Booleans
 
             /// The stream priority data transmitted on this frame, if any.
-            @inlinable
             public var priorityData: StreamPriorityData? {
                 get {
                     if self.booleans.contains(.priorityPresent) {
@@ -280,7 +250,6 @@ public struct HTTP2Frame: Sendable {
             }
 
             /// The value of the `END_STREAM` flag on this frame.
-            @inlinable
             public var endStream: Bool {
                 get {
                     self.booleans.contains(.endStream)
@@ -295,7 +264,6 @@ public struct HTTP2Frame: Sendable {
             }
 
             /// The number of padding bytes sent in this frame. If nil, this frame was not padded.
-            @inlinable
             public var paddingBytes: Int? {
                 get {
                     if self.booleans.contains(.paddingPresent) {
