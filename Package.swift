@@ -34,7 +34,7 @@ let strictConcurrencySettings: [SwiftSetting] = {
 }()
 
 let package = Package(
-    name: "swift-nio-http2",
+    name: "candle-swift-nio-http2",
     products: [
         .library(name: "CandleNIOHTTP2", targets: ["CandleNIOHTTP2"])
     ],
