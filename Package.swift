@@ -36,7 +36,7 @@ let strictConcurrencySettings: [SwiftSetting] = {
 let package = Package(
     name: "swift-nio-http2",
     products: [
-        .library(name: "NIOHTTP2", targets: ["NIOHTTP2"])
+        .library(name: "CandleNIOHTTP2", targets: ["CandleNIOHTTP2"])
     ],
     dependencies: [
         .package(url: "https://github.com/candlefinance/swift-nio.git", branch: "fix-candle-2.82.1"),
@@ -46,65 +46,65 @@ let package = Package(
         .executableTarget(
             name: "NIOHTTP2Server",
             dependencies: [
-                "NIOHTTP2",
-                .product(name: "NIOCore", package: "swift-nio"),
-                .product(name: "NIOPosix", package: "swift-nio"),
-                .product(name: "NIOHTTP1", package: "swift-nio"),
+                "CandleNIOHTTP2",
+                .product(name: "CandleNIOCore", package: "swift-nio"),
+                .product(name: "CandleNIOPosix", package: "swift-nio"),
+                .product(name: "CandleNIOHTTP1", package: "swift-nio"),
             ],
             swiftSettings: strictConcurrencySettings
         ),
         .executableTarget(
             name: "NIOHTTP2PerformanceTester",
             dependencies: [
-                "NIOHTTP2",
-                .product(name: "NIOCore", package: "swift-nio"),
-                .product(name: "NIOPosix", package: "swift-nio"),
-                .product(name: "NIOEmbedded", package: "swift-nio"),
+                "CandleNIOHTTP2",
+                .product(name: "CandleNIOCore", package: "swift-nio"),
+                .product(name: "CandleNIOPosix", package: "swift-nio"),
+                .product(name: "CandleNIOEmbedded", package: "swift-nio"),
             ],
             swiftSettings: strictConcurrencySettings
         ),
         .target(
-            name: "NIOHTTP2",
+            name: "CandleNIOHTTP2",
             dependencies: [
-                "NIOHPACK",
-                .product(name: "NIO", package: "swift-nio"),
-                .product(name: "NIOCore", package: "swift-nio"),
-                .product(name: "NIOHTTP1", package: "swift-nio"),
-                .product(name: "NIOTLS", package: "swift-nio"),
-                .product(name: "NIOConcurrencyHelpers", package: "swift-nio"),
-                .product(name: "Atomics", package: "swift-atomics"),
+                "CandleNIOHPACK",
+                .product(name: "CandleNIO", package: "swift-nio"),
+                .product(name: "CandleNIOCore", package: "swift-nio"),
+                .product(name: "CandleNIOHTTP1", package: "swift-nio"),
+                .product(name: "CandleNIOTLS", package: "swift-nio"),
+                .product(name: "CandleNIOConcurrencyHelpers", package: "swift-nio"),
+                .product(name: "CandleAtomics", package: "swift-atomics"),
             ],
             swiftSettings: strictConcurrencySettings
         ),
         .target(
-            name: "NIOHPACK",
+            name: "CandleNIOHPACK",
             dependencies: [
-                .product(name: "NIO", package: "swift-nio"),
-                .product(name: "NIOCore", package: "swift-nio"),
-                .product(name: "NIOConcurrencyHelpers", package: "swift-nio"),
-                .product(name: "NIOHTTP1", package: "swift-nio"),
+                .product(name: "CandleNIO", package: "swift-nio"),
+                .product(name: "CandleNIOCore", package: "swift-nio"),
+                .product(name: "CandleNIOConcurrencyHelpers", package: "swift-nio"),
+                .product(name: "CandleNIOHTTP1", package: "swift-nio"),
             ],
             swiftSettings: strictConcurrencySettings
         ),
         .testTarget(
             name: "NIOHTTP2Tests",
             dependencies: [
-                "NIOHTTP2",
-                .product(name: "NIOConcurrencyHelpers", package: "swift-nio"),
-                .product(name: "NIOCore", package: "swift-nio"),
-                .product(name: "NIOEmbedded", package: "swift-nio"),
-                .product(name: "NIOHTTP1", package: "swift-nio"),
-                .product(name: "NIOFoundationCompat", package: "swift-nio"),
-                .product(name: "Atomics", package: "swift-atomics"),
+                "CandleNIOHTTP2",
+                .product(name: "CandleNIOConcurrencyHelpers", package: "swift-nio"),
+                .product(name: "CandleNIOCore", package: "swift-nio"),
+                .product(name: "CandleNIOEmbedded", package: "swift-nio"),
+                .product(name: "CandleNIOHTTP1", package: "swift-nio"),
+                .product(name: "CandleNIOFoundationCompat", package: "swift-nio"),
+                .product(name: "CandleAtomics", package: "swift-atomics"),
             ],
             swiftSettings: strictConcurrencySettings
         ),
         .testTarget(
             name: "NIOHPACKTests",
             dependencies: [
-                "NIOHPACK",
-                .product(name: "NIOCore", package: "swift-nio"),
-                .product(name: "NIOFoundationCompat", package: "swift-nio"),
+                "CandleNIOHPACK",
+                .product(name: "CandleNIOCore", package: "swift-nio"),
+                .product(name: "CandleNIOFoundationCompat", package: "swift-nio"),
             ],
             resources: [
                 .copy("Fixtures/large_complex_huffman_b64.txt"),

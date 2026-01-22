@@ -12,9 +12,9 @@
 //
 //===----------------------------------------------------------------------===//
 
-import NIOCore
-import NIOHPACK
-import NIOHTTP2
+import CandleNIOCore
+import CandleNIOHPACK
+import CandleNIOHTTP2
 
 func run(identifier: String) {
     var buffer = ByteBufferAllocator().buffer(capacity: 128)

@@ -12,11 +12,11 @@
 //
 //===----------------------------------------------------------------------===//
 
-import NIOCore
-import NIOEmbedded
-import NIOHPACK
-import NIOHTTP1
-import NIOHTTP2
+import CandleNIOCore
+import CandleNIOEmbedded
+import CandleNIOHPACK
+import CandleNIOHTTP1
+import CandleNIOHTTP2
 
 final class ServerHandler: ChannelInboundHandler {
     typealias InboundIn = HTTP2Frame.FramePayload

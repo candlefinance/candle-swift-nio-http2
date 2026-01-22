@@ -12,8 +12,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-import NIOCore
-import NIOHPACK
+import CandleNIOCore
+import CandleNIOHPACK
 
 final class HPACKHeaderDecodingBenchmark {
     private var headers: ByteBuffer

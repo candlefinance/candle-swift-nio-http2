@@ -20,10 +20,10 @@
 // https://github.com/apple/swift-protobuf/blob/main/LICENSE.txt
 
 import Foundation
-import NIOCore
-import NIOEmbedded
-import NIOHTTP1
-import NIOHTTP2
+import CandleNIOCore
+import CandleNIOEmbedded
+import CandleNIOHTTP1
+import CandleNIOHTTP2
 
 private func fuzzInput(_ bytes: UnsafeRawBufferPointer) throws {
     let channel = EmbeddedChannel()

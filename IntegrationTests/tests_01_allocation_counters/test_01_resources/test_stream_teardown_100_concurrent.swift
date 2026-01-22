@@ -12,11 +12,11 @@
 //
 //===----------------------------------------------------------------------===//
 
-import Atomics
-import NIOCore
+import CandleAtomics
+import CandleNIOCore
 import NIOEmbedded
-import NIOHPACK
-import NIOHTTP2
+import CandleNIOHPACK
+import CandleNIOHTTP2
 
 struct StreamTeardownBenchmark {
     private let concurrentStreams: Int

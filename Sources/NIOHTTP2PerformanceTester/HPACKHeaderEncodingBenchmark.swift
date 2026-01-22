@@ -12,8 +12,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-import NIOCore
-import NIOHPACK
+import CandleNIOCore
+import CandleNIOHPACK
 
 final class HPACKHeaderEncodingBenchmark {
     private let headers: HPACKHeaders

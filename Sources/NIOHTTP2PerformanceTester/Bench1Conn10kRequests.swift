@@ -12,10 +12,10 @@
 //
 //===----------------------------------------------------------------------===//
 
-import NIOCore
-import NIOHTTP1
-import NIOHTTP2
-import NIOPosix
+import CandleNIOCore
+import CandleNIOHTTP1
+import CandleNIOHTTP2
+import CandleNIOPosix
 
 final class Bench1Conn10kRequests: Benchmark {
     var group: MultiThreadedEventLoopGroup!

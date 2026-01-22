@@ -16,10 +16,10 @@
 // hit it with curl like so: curl --http2-prior-knowledge http://localhost:8888/
 
 import Foundation
-import NIOCore
-import NIOHTTP1
-import NIOHTTP2
-import NIOPosix
+import CandleNIOCore
+import CandleNIOHTTP1
+import CandleNIOHTTP2
+import CandleNIOPosix
 
 final class HTTP1TestServer: ChannelInboundHandler {
     public typealias InboundIn = HTTPServerRequestPart

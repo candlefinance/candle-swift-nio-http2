@@ -12,8 +12,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-import NIOCore
-import NIOHPACK
+import CandleNIOCore
+import CandleNIOHPACK
 
 final class HPACKHeaderCanonicalFormBenchmark {
     private let headers: HPACKHeaders

@@ -12,11 +12,11 @@
 //
 //===----------------------------------------------------------------------===//
 
-import NIOCore
+import CandleNIOCore
 import NIOEmbedded
-import NIOHPACK
-import NIOHTTP1
-import NIOHTTP2
+import CandleNIOHPACK
+import CandleNIOHTTP1
+import CandleNIOHTTP2
 
 func run(identifier: String) {
     testRun(identifier: identifier, usePromiseBasedAPI: true) { channel in

@@ -13,8 +13,8 @@
 //===----------------------------------------------------------------------===//
 
 import Foundation
-import NIOCore
-import NIOHPACK
+import CandleNIOCore
+import CandleNIOHPACK
 
 /// This benchmark is mostly attempting to stress the Huffman Decoding implementation by
 /// way of using larger or more complex strings.

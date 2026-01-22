@@ -12,10 +12,10 @@
 //
 //===----------------------------------------------------------------------===//
 
-import NIOCore
-import NIOEmbedded
-import NIOHPACK
-import NIOHTTP2
+import CandleNIOCore
+import CandleNIOEmbedded
+import CandleNIOHPACK
+import CandleNIOHTTP2
 
 struct ServerOnly1KRequestsBenchmark {
     private let concurrentStreams: Int

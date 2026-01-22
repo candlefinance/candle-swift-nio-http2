@@ -11,9 +11,9 @@
 // SPDX-License-Identifier: Apache-2.0
 //
 //===----------------------------------------------------------------------===//
-import NIOCore
-import NIOHPACK
-import NIOHTTP1
+import CandleNIOCore
+import CandleNIOHPACK
+import CandleNIOHTTP1
 
 final class HPACKHeadersNormalizationOfHTTPHeadersBenchmark {
     private let httpHeadersKind: HeadersKind

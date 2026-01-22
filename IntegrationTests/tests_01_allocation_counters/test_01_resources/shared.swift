@@ -12,9 +12,9 @@
 //
 //===----------------------------------------------------------------------===//
 
-import NIOCore
-import NIOEmbedded
-import NIOHTTP2
+import CandleNIOCore
+import CandleNIOEmbedded
+import CandleNIOHTTP2
 
 /// Test use only. Allows abstracting over the two multiplexer implementations to write common testing code
 internal protocol MultiplexerChannelCreator {

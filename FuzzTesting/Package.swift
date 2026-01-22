@@ -25,10 +25,10 @@ let package = Package(
         .target(
             name: "FuzzHTTP2",
             dependencies: [
-                .product(name: "NIOHTTP2", package: "swift-nio-http2"),
-                .product(name: "NIOHTTP1", package: "swift-nio"),
-                .product(name: "NIOCore", package: "swift-nio"),
-                .product(name: "NIOEmbedded", package: "swift-nio"),
+                .product(name: "CandleNIOHTTP2", package: "swift-nio-http2"),
+                .product(name: "CandleNIOHTTP1", package: "swift-nio"),
+                .product(name: "CandleNIOCore", package: "swift-nio"),
+                .product(name: "CandleNIOEmbedded", package: "swift-nio"),
             ]
         )
     ]
